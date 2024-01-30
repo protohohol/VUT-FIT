@@ -1,0 +1,884 @@
+[0;31m\u2717 test-cases/01: cat inputs/osoby.csv | head -n 5 | ./corona[0m
+
+Expected output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+6f4125cb-fb41-4fb0-a478-07b69ba106a4,2020-03-01,21,Z,CZ010,CZ0100,1,IT,1
+5841443b-7df4-4af9-acab-75ca47010ec3,2020-03-01,43,M,CZ042,CZ0421,1,IT,1
+5cdb7ece-97a2-4336-9715-59dc70a48a2c,2020-03-01,67,M,CZ010,CZ0100,1,IT,1
+d345e0e2-9056-4d3f-b790-485b12831180,2020-03-03,21,Z,CZ010,CZ0100,,,
+[0m
+Actual output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+6f4125cb-fb41-4fb0-a478-07b69ba106a4,2020-03-01,21,Z,CZ010,CZ0100,1,IT,1
+5841443b-7df4-4af9-acab-75ca47010ec3,2020-03-01,43,M,CZ042,CZ0421,1,IT,1
+5cdb7ece-97a2-4336-9715-59dc70a48a2c,2020-03-01,67,M,CZ010,CZ0100,1,IT,1
+d345e0e2-9056-4d3f-b790-485b12831180,2020-03-03,21,Z,CZ010,CZ0100,,,
+[0m
+[0;31m\u2717 test-cases/02: ./corona infected inputs/osoby.csv[0m
+
+Expected output:\e[2m
+3510360
+[0m
+Actual output:\e[2m
+3510360
+[0m
+[0;31m\u2717 test-cases/03: ./corona infected inputs/infected-jan22/2022-01-*.csv[0m
+
+Expected output:\e[2m
+560894
+[0m
+Actual output:\e[2m
+560894
+[0m
+[0;31m\u2717 test-cases/04: ./corona merge inputs/infected-jan22/2022-01-*.csv | head -n 3[0m
+
+Expected output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+741d72a4-2b6e-4703-872d-928748ca0ade,2022-01-01,3,Z,CZ020,CZ0203,,,1
+f39754b8-5e7f-44fd-8b65-e4e7e3b89521,2022-01-01,52,Z,CZ052,CZ0522,,,1
+[0m
+Actual output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+741d72a4-2b6e-4703-872d-928748ca0ade,2022-01-01,3,Z,CZ020,CZ0203,,,1
+f39754b8-5e7f-44fd-8b65-e4e7e3b89521,2022-01-01,52,Z,CZ052,CZ0522,,,1
+[0m
+[0;31m\u2717 test-cases/05: ./corona merge inputs/infected-jan22/2022-01-*.csv | tail -n 2[0m
+
+Expected output:\e[2m
+1a27f58f-8950-40c5-89fa-3795f4a906f4,2022-01-31,19,Z,CZ063,CZ0635,,,1
+9aebc069-89d5-4ba0-96c5-aefa1f2c6746,2022-01-31,19,M,CZ064,CZ0642,,,1
+[0m
+Actual output:\e[2m
+1a27f58f-8950-40c5-89fa-3795f4a906f4,2022-01-31,19,Z,CZ063,CZ0635,,,1
+9aebc069-89d5-4ba0-96c5-aefa1f2c6746,2022-01-31,19,M,CZ064,CZ0642,,,1
+[0m
+[0;31m\u2717 test-cases/06: cat inputs/osoby.csv | ./corona gender[0m
+
+Expected output:\e[2m
+M: 1703679
+Z: 1806681
+[0m
+Actual output:\e[2m
+M: 1703679
+Z: 1806681
+[0m
+[0;31m\u2717 test-cases/07: cat inputs/osoby.csv | ./corona -a 2021-07-19 infected[0m
+
+Expected output:\e[2m
+1835517
+[0m
+Actual output:\e[2m
+1835517
+[0m
+[0;31m\u2717 test-cases/08: cat inputs/osoby.csv | ./corona daily | head -n 3[0m
+
+Expected output:\e[2m
+2020-03-01: 3
+2020-03-03: 2
+2020-03-04: 1
+[0m
+Actual output:\e[2m
+2020-03-01: 3
+2020-03-03: 2
+2020-03-04: 1
+[0m
+[0;31m\u2717 test-cases/09: cat inputs/osoby.csv | ./corona monthly | head -n 3[0m
+
+Expected output:\e[2m
+2020-03: 3316
+2020-04: 4385
+2020-05: 1615
+[0m
+Actual output:\e[2m
+2020-03: 3316
+2020-04: 4385
+2020-05: 1615
+[0m
+[0;31m\u2717 test-cases/10: cat inputs/osoby.csv | ./corona yearly[0m
+
+Expected output:\e[2m
+2020: 732808
+2021: 1750848
+2022: 1026704
+[0m
+Actual output:\e[2m
+2020: 732808
+2021: 1750848
+2022: 1026704
+[0m
+[0;31m\u2717 test-cases/11: ./corona countries inputs/osoby.csv[0m
+
+Expected output:\e[2m
+99: 1
+AD: 1
+AE: 444
+AF: 13
+AI: 13
+AL: 81
+AM: 20
+AO: 1
+AR: 12
+AS: 3
+AT: 2524
+AU: 13
+AW: 2
+AZ: 31
+BA: 72
+BB: 5
+BD: 6
+BE: 192
+BF: 1
+BG: 445
+BL: 1
+BO: 2
+BQ: 1
+BR: 29
+BW: 1
+BY: 119
+CA: 58
+CF: 2
+CG: 3
+CH: 341
+CI: 3
+CK: 1
+CL: 3
+CM: 3
+CN: 2
+CO: 20
+CR: 40
+CU: 14
+CV: 47
+CW: 1
+CY: 42
+DE: 4014
+DK: 112
+DM: 3
+DO: 276
+DZ: 4
+EC: 15
+EE: 18
+EG: 990
+ES: 1393
+ET: 19
+FI: 49
+FK: 2
+FO: 1
+FR: 757
+GA: 3
+GB: 783
+GD: 1
+GE: 79
+GF: 1
+GG: 1
+GH: 8
+GI: 2
+GN: 2
+GP: 4
+GR: 357
+GT: 1
+GW: 1
+HN: 5
+HR: 1057
+HT: 2
+HU: 791
+ID: 10
+IE: 141
+IL: 172
+IN: 85
+IO: 1
+IQ: 9
+IR: 12
+IS: 22
+IT: 2124
+JM: 5
+JO: 63
+JP: 20
+KE: 39
+KG: 13
+KR: 10
+KW: 4
+KY: 1
+KZ: 110
+LB: 13
+LI: 6
+LK: 63
+LT: 37
+LU: 25
+LV: 33
+LY: 1
+MA: 15
+MC: 3
+MD: 121
+ME: 46
+MF: 2
+MG: 1
+MK: 98
+ML: 19
+MN: 19
+MO: 1
+MQ: 4
+MT: 97
+MU: 44
+MV: 117
+MX: 170
+MY: 7
+NA: 12
+NG: 11
+NI: 2
+NL: 292
+NO: 45
+NP: 21
+NZ: 2
+OM: 36
+PA: 18
+PE: 11
+PF: 2
+PH: 27
+PK: 21
+PL: 1039
+PT: 261
+PY: 1
+QA: 19
+RE: 1
+RO: 193
+RS: 232
+RU: 889
+RW: 2
+SA: 42
+SC: 30
+SD: 2
+SE: 207
+SG: 3
+SI: 136
+SK: 2263
+SL: 1
+SN: 6
+SO: 1
+SR: 1
+SS: 1
+SV: 1
+SX: 1
+SY: 3
+SZ: 1
+TH: 78
+TJ: 7
+TN: 130
+TR: 594
+TW: 5
+TZ: 355
+UA: 4002
+UG: 9
+UM: 7
+US: 448
+UY: 6
+UZ: 36
+VA: 1
+VE: 1
+VG: 7
+VI: 3
+VN: 11
+XK: 21
+YE: 1
+ZA: 36
+ZM: 2
+ZW: 1
+[0m
+Actual output:\e[2m
+99: 1
+AD: 1
+AE: 444
+AF: 13
+AI: 13
+AL: 81
+AM: 20
+AO: 1
+AR: 12
+AS: 3
+AT: 2522
+AU: 13
+AW: 2
+AZ: 31
+BA: 72
+BB: 5
+BD: 6
+BE: 192
+BF: 1
+BG: 444
+BL: 1
+BO: 2
+BQ: 1
+BR: 29
+BW: 1
+BY: 118
+CA: 58
+CF: 2
+CG: 3
+CH: 341
+CI: 3
+CK: 1
+CL: 3
+CM: 3
+CN: 2
+CO: 20
+CR: 40
+CU: 14
+CV: 47
+CW: 1
+CY: 42
+CZ: 280
+DE: 4009
+DK: 112
+DM: 3
+DO: 276
+DZ: 4
+EC: 15
+EE: 18
+EG: 988
+ES: 1392
+ET: 19
+FI: 49
+FK: 2
+FO: 1
+FR: 756
+GA: 3
+GB: 783
+GD: 1
+GE: 79
+GF: 1
+GG: 1
+GH: 8
+GI: 2
+GN: 2
+GP: 4
+GR: 357
+GT: 1
+GW: 1
+HN: 5
+HR: 1057
+HT: 2
+HU: 791
+ID: 10
+IE: 141
+IL: 172
+IN: 85
+IO: 1
+IQ: 9
+IR: 12
+IS: 22
+IT: 2123
+JM: 5
+JO: 63
+JP: 20
+KE: 39
+KG: 13
+KR: 10
+KW: 4
+KY: 1
+KZ: 110
+LB: 13
+LI: 6
+LK: 63
+LT: 37
+LU: 25
+LV: 33
+LY: 1
+MA: 15
+MC: 3
+MD: 121
+ME: 46
+MF: 2
+MG: 1
+MK: 98
+ML: 19
+MN: 19
+MO: 1
+MQ: 4
+MT: 97
+MU: 44
+MV: 117
+MX: 169
+MY: 7
+NA: 12
+NG: 11
+NI: 2
+NL: 291
+NO: 45
+NP: 21
+NZ: 2
+OM: 36
+PA: 18
+PE: 11
+PF: 2
+PH: 27
+PK: 21
+PL: 1037
+PT: 261
+PY: 1
+QA: 19
+RE: 1
+RO: 193
+RS: 231
+RU: 889
+RW: 2
+SA: 42
+SC: 30
+SD: 2
+SE: 207
+SG: 3
+SI: 136
+SK: 2261
+SL: 1
+SN: 6
+SO: 1
+SR: 1
+SS: 1
+SV: 1
+SX: 1
+SY: 3
+SZ: 1
+TH: 78
+TJ: 7
+TN: 130
+TR: 594
+TW: 5
+TZ: 355
+UA: 3997
+UG: 9
+UM: 7
+US: 446
+UY: 6
+UZ: 36
+VA: 1
+VE: 1
+VG: 7
+VI: 3
+VN: 11
+XK: 21
+YE: 1
+ZA: 36
+ZM: 2
+ZW: 1
+[0m
+[0;31m\u2717 test-cases/12: ./corona -g M inputs/osoby.csv | head -n 6[0m
+
+Expected output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+5841443b-7df4-4af9-acab-75ca47010ec3,2020-03-01,43,M,CZ042,CZ0421,1,IT,1
+5cdb7ece-97a2-4336-9715-59dc70a48a2c,2020-03-01,67,M,CZ010,CZ0100,1,IT,1
+496a049f-656e-4274-a51f-72aa92d01f33,2020-03-05,49,M,CZ042,CZ0421,1,IT,1
+815a2219-2735-46ae-8b14-658459481b2f,2020-03-06,47,M,CZ010,CZ0100,1,IT,1
+9f78dd0d-2e71-4d37-89a2-665b44b2a607,2020-03-06,44,M,CZ010,CZ0100,1,IT,1
+[0m
+Actual output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+5841443b-7df4-4af9-acab-75ca47010ec3,2020-03-01,43,M,CZ042,CZ0421,1,IT,1
+5cdb7ece-97a2-4336-9715-59dc70a48a2c,2020-03-01,67,M,CZ010,CZ0100,1,IT,1
+496a049f-656e-4274-a51f-72aa92d01f33,2020-03-05,49,M,CZ042,CZ0421,1,IT,1
+815a2219-2735-46ae-8b14-658459481b2f,2020-03-06,47,M,CZ010,CZ0100,1,IT,1
+9f78dd0d-2e71-4d37-89a2-665b44b2a607,2020-03-06,44,M,CZ010,CZ0100,1,IT,1
+[0m
+[0;31m\u2717 test-cases/13: cat /dev/null | ./corona[0m
+
+Expected output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+[0m
+Actual output:\e[2m
+[0m
+[0;31m\u2717 test-cases/14: ./corona -s daily inputs/osoby.csv | tail -n 2[0m
+
+Expected output:\e[2m
+2022-02-19: ################
+2022-02-20: ########
+[0m
+Actual output:\e[2m
+2022-02-19: ################
+2022-02-20: ########
+[0m
+[0;31m\u2717 test-cases/15: ./corona -s monthly inputs/osoby.csv | tail -n 2[0m
+
+Expected output:\e[2m
+2022-01: ########################################################
+2022-02: ##############################################
+[0m
+Actual output:\e[2m
+2022-01: ########################################################
+2022-02: ##############################################
+[0m
+[0;31m\u2717 test-cases/16: ./corona -s 20 yearly inputs/osoby.csv[0m
+
+Expected output:\e[2m
+2020: ########
+2021: ####################
+2022: ###########
+[0m
+Actual output:\e[2m
+2020: ########
+2021: ####################
+2022: ###########
+[0m
+[0;31m\u2717 test-cases/18: ./corona districts inputs/osoby.csv | tail -n 2[0m
+
+Expected output:\e[2m
+CZ0806: 103556
+None: 2959
+[0m
+Actual output:\e[2m
+CZ0805: 63209
+CZ0806: 103556
+[0m
+[0;31m\u2717 test-cases/19: ./corona regions inputs/osoby.csv | tail -n 2[0m
+
+Expected output:\e[2m
+CZ080: 387509
+None: 2926
+[0m
+Actual output:\e[2m
+CZ072: 198910
+CZ080: 387509
+[0m
+[0;31m\u2717 test-cases/20: ./corona age inputs/osoby.csv[0m
+
+Expected output:\e[2m
+0-5   : 118107
+6-15  : 511868
+16-25 : 410980
+26-35 : 511672
+36-45 : 649751
+46-55 : 570064
+56-65 : 359275
+66-75 : 225485
+76-85 : 110360
+86-95 : 39405
+96-105: 2651
+>105  : 302
+None  : 440
+[0m
+Actual output:\e[2m
+0-5   : 118107
+6-15  : 511868
+16-25 : 410980
+26-35 : 511672
+36-45 : 649751
+46-55 : 570064
+56-65 : 359275
+66-75 : 225485
+76-85 : 110360
+86-95 : 39405
+96-105: 2651
+>105  : 302
+None  : 440
+[0m
+[0;31m\u2717 test-cases/21: ./corona infected inputs/osoby2.csv 2>&1 > /dev/null[0m
+
+Expected output:\e[2m
+Invalid date: 0dc57759-d153-45c2-8d14-fb92fc028060,2020-15-03,62,Z,CZ010,CZ0100,,,1
+Invalid age: 5b0a9692-a72a-4f34-a014-83ae08a79f20,2020-03-10,3.1415,Z,CZ071,CZ0712,1,IT,1
+[0m
+Actual output:\e[2m
+Invalid date: 0dc57759-d153-45c2-8d14-fb92fc028060,2020-15-03,62,Z,CZ010,CZ0100,,,1
+Invalid age: 5b0a9692-a72a-4f34-a014-83ae08a79f20,2020-03-10,3.1415,Z,CZ071,CZ0712,1,IT,1
+[0m
+[0;31m\u2717 test-cases/22: ./corona daily inputs/osoby2.csv 2>&1 > /dev/null[0m
+
+Expected output:\e[2m
+Invalid date: 0dc57759-d153-45c2-8d14-fb92fc028060,2020-15-03,62,Z,CZ010,CZ0100,,,1
+Invalid age: 5b0a9692-a72a-4f34-a014-83ae08a79f20,2020-03-10,3.1415,Z,CZ071,CZ0712,1,IT,1
+[0m
+Actual output:\e[2m
+Invalid date: 0dc57759-d153-45c2-8d14-fb92fc028060,2020-15-03,62,Z,CZ010,CZ0100,,,1
+Invalid age: 5b0a9692-a72a-4f34-a014-83ae08a79f20,2020-03-10,3.1415,Z,CZ071,CZ0712,1,IT,1
+[0m
+[0;31m\u2717 test-cases/25: ./corona -g M infected inputs/flag_option.csv[0m
+
+Expected output:\e[2m
+3
+[0m
+Actual output:\e[2m
+3
+[0m
+[0;31m\u2717 test-cases/26: ./corona -g Z infected inputs/flag_option.csv[0m
+
+Expected output:\e[2m
+6
+[0m
+Actual output:\e[2m
+6
+[0m
+[0;31m\u2717 test-cases/27: ./corona merge inputs/first.csv inputs/second.csv[0m
+
+Expected output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+741d72a4-2b6e-4703-872d-928748ca0ade,2022-01-01,3,Z,CZ020,CZ0203,,,1
+f39754b8-5e7f-44fd-8b65-e4e7e3b89521,2022-01-01,52,Z,CZ052,CZ0522,,,1
+3d5b5e66-a0a4-49b2-91b2-83c073fa0a0f,2022-01-01,79,M,CZ064,CZ0646,,,1
+0db98dc6-6f53-4ef0-aeb3-8e2891473106,2022-01-01,2,M,CZ010,CZ0100,,,1
+3627a6ce-6660-4f3e-a750-3666e9f608b6,2022-01-03,25,Z,CZ010,CZ0100,,,1
+45c6f7ea-cbf8-42f7-b05a-2d17027e996f,2022-01-03,20,M,CZ010,CZ0100,,,1
+b7a6df4a-a1d4-4e77-b5c8-67516eb0031d,2022-01-03,9,M,CZ020,CZ0204,,,1
+1e33c113-57c8-4fa2-ac5b-c37ddc6b67a6,2022-01-03,21,Z,CZ071,CZ0711,,,1
+[0m
+Actual output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+741d72a4-2b6e-4703-872d-928748ca0ade,2022-01-01,3,Z,CZ020,CZ0203,,,1
+f39754b8-5e7f-44fd-8b65-e4e7e3b89521,2022-01-01,52,Z,CZ052,CZ0522,,,1
+3d5b5e66-a0a4-49b2-91b2-83c073fa0a0f,2022-01-01,79,M,CZ064,CZ0646,,,1
+0db98dc6-6f53-4ef0-aeb3-8e2891473106,2022-01-01,2,M,CZ010,CZ0100,,,1
+3627a6ce-6660-4f3e-a750-3666e9f608b6,2022-01-03,25,Z,CZ010,CZ0100,,,1
+45c6f7ea-cbf8-42f7-b05a-2d17027e996f,2022-01-03,20,M,CZ010,CZ0100,,,1
+b7a6df4a-a1d4-4e77-b5c8-67516eb0031d,2022-01-03,9,M,CZ020,CZ0204,,,1
+1e33c113-57c8-4fa2-ac5b-c37ddc6b67a6,2022-01-03,21,Z,CZ071,CZ0711,,,1
+[0m
+[0;31m\u2717 test-cases/28: ./corona -g M inputs/first.csv inputs/second.csv[0m
+
+Expected output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+3d5b5e66-a0a4-49b2-91b2-83c073fa0a0f,2022-01-01,79,M,CZ064,CZ0646,,,1
+0db98dc6-6f53-4ef0-aeb3-8e2891473106,2022-01-01,2,M,CZ010,CZ0100,,,1
+45c6f7ea-cbf8-42f7-b05a-2d17027e996f,2022-01-03,20,M,CZ010,CZ0100,,,1
+b7a6df4a-a1d4-4e77-b5c8-67516eb0031d,2022-01-03,9,M,CZ020,CZ0204,,,1
+[0m
+Actual output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+3d5b5e66-a0a4-49b2-91b2-83c073fa0a0f,2022-01-01,79,M,CZ064,CZ0646,,,1
+0db98dc6-6f53-4ef0-aeb3-8e2891473106,2022-01-01,2,M,CZ010,CZ0100,,,1
+45c6f7ea-cbf8-42f7-b05a-2d17027e996f,2022-01-03,20,M,CZ010,CZ0100,,,1
+b7a6df4a-a1d4-4e77-b5c8-67516eb0031d,2022-01-03,9,M,CZ020,CZ0204,,,1
+[0m
+[0;31m\u2717 test-cases/29: ./corona merge inputs/bom_first.csv inputs/bom_second.csv[0m
+
+Expected output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+6f4125cb-fb41-4fb0-a478-07b69ba106a4,2020-03-01,21,Z,CZ010,CZ0100,1,IT,1
+5841443b-7df4-4af9-acab-75ca47010ec3,2020-03-01,43,M,CZ042,CZ0421,1,IT,1
+ed4e9ec1-947d-454f-846d-32701693ab2f,2022-02-20,2,Z,CZ020,CZ0209,,,1
+da750c62-2ef6-478f-b7f0-234f4d725705,2022-02-20,28,Z,CZ020,CZ0206,,,1
+[0m
+Actual output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+6f4125cb-fb41-4fb0-a478-07b69ba106a4,2020-03-01,21,Z,CZ010,CZ0100,1,IT,1
+5841443b-7df4-4af9-acab-75ca47010ec3,2020-03-01,43,M,CZ042,CZ0421,1,IT,1
+ed4e9ec1-947d-454f-846d-32701693ab2f,2022-02-20,2,Z,CZ020,CZ0209,,,1
+da750c62-2ef6-478f-b7f0-234f4d725705,2022-02-20,28,Z,CZ020,CZ0206,,,1
+[0m
+[0;31m\u2717 test-cases/30: cat inputs/gender_with_none.csv | ./corona gender[0m
+
+Expected output:\e[2m
+M: 2
+Z: 3
+None: 1
+[0m
+Actual output:\e[2m
+M: 2
+Z: 3
+None: 1
+[0m
+[0;31m\u2717 test-cases/31: ./corona age inputs/age_data_first.csv inputs/bom_second.csv[0m
+
+Expected output:\e[2m
+0-5   : 1
+6-15  : 0
+16-25 : 4
+26-35 : 1
+36-45 : 1
+46-55 : 2
+56-65 : 0
+66-75 : 2
+76-85 : 0
+86-95 : 0
+96-105: 0
+>105  : 0
+[0m
+Actual output:\e[2m
+0-5   : 1
+6-15  : 0
+16-25 : 4
+26-35 : 1
+36-45 : 1
+46-55 : 2
+56-65 : 0
+66-75 : 2
+76-85 : 0
+86-95 : 0
+96-105: 0
+>105  : 0
+[0m
+[0;31m\u2717 test-cases/32: ./corona -g Z age inputs/first.csv inputs/age_data_second.csv[0m
+
+Expected output:\e[2m
+0-5   : 1
+6-15  : 0
+16-25 : 1
+26-35 : 0
+36-45 : 0
+46-55 : 1
+56-65 : 0
+66-75 : 0
+76-85 : 0
+86-95 : 0
+96-105: 0
+>105  : 0
+None  : 1
+[0m
+Actual output:\e[2m
+0-5   : 1
+6-15  : 0
+16-25 : 1
+26-35 : 0
+36-45 : 0
+46-55 : 1
+56-65 : 0
+66-75 : 0
+76-85 : 0
+86-95 : 0
+96-105: 0
+>105  : 0
+None  : 1
+[0m
+[0;31m\u2717 test-cases/33: ./corona -b 2020-03-03 infected inputs/b_case.csv[0m
+
+Expected output:\e[2m
+3
+[0m
+Actual output:\e[2m
+3
+[0m
+[0;31m\u2717 test-cases/34: ./corona -a 2020-03-01 -b 2020-03-03 inputs/b_case.csv[0m
+
+Expected output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+5cdb7ece-97a2-4336-9715-59dc70a48a2c,2020-03-01,67,M,CZ010,CZ0100,1,IT,1
+d345e0e2-9056-4d3f-b790-485b12831180,2020-03-03,21,Z,CZ010,CZ0100,,,
+515ea72b-3584-4a1a-8b59-9f69a094d453,2020-03-03,53,Z,CZ042,CZ0421,1,IT,1
+[0m
+Actual output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+5cdb7ece-97a2-4336-9715-59dc70a48a2c,2020-03-01,67,M,CZ010,CZ0100,1,IT,1
+d345e0e2-9056-4d3f-b790-485b12831180,2020-03-03,21,Z,CZ010,CZ0100,,,
+515ea72b-3584-4a1a-8b59-9f69a094d453,2020-03-03,53,Z,CZ042,CZ0421,1,IT,1
+[0m
+[0;31m\u2717 test-cases/35: ./corona -b 2022-01-03 -g M -a 2022-01-01 inputs/first.csv inputs/second.csv[0m
+
+Expected output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+3d5b5e66-a0a4-49b2-91b2-83c073fa0a0f,2022-01-01,79,M,CZ064,CZ0646,,,1
+0db98dc6-6f53-4ef0-aeb3-8e2891473106,2022-01-01,2,M,CZ010,CZ0100,,,1
+45c6f7ea-cbf8-42f7-b05a-2d17027e996f,2022-01-03,20,M,CZ010,CZ0100,,,1
+b7a6df4a-a1d4-4e77-b5c8-67516eb0031d,2022-01-03,9,M,CZ020,CZ0204,,,1
+[0m
+Actual output:\e[2m
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+3d5b5e66-a0a4-49b2-91b2-83c073fa0a0f,2022-01-01,79,M,CZ064,CZ0646,,,1
+0db98dc6-6f53-4ef0-aeb3-8e2891473106,2022-01-01,2,M,CZ010,CZ0100,,,1
+45c6f7ea-cbf8-42f7-b05a-2d17027e996f,2022-01-03,20,M,CZ010,CZ0100,,,1
+b7a6df4a-a1d4-4e77-b5c8-67516eb0031d,2022-01-03,9,M,CZ020,CZ0204,,,1
+[0m
+[0;31m\u2717 test-cases/36: ./corona infected inputs/osoby-short.csv.gz inputs/osoby-short.csv.bz2[0m
+
+Expected output:\e[2m
+3998
+[0m
+Actual output:\e[2m
+3998
+[0m
+[0;31m\u2717 test-cases/37: ./corona -g M age inputs/osoby-short.csv.bz2[0m
+
+Expected output:\e[2m
+0-5   : 22
+6-15  : 45
+16-25 : 118
+26-35 : 187
+36-45 : 232
+46-55 : 202
+56-65 : 145
+66-75 : 85
+76-85 : 25
+86-95 : 14
+96-105: 1
+>105  : 0
+[0m
+Actual output:\e[2m
+0-5   : 22
+6-15  : 45
+16-25 : 118
+26-35 : 187
+36-45 : 232
+46-55 : 202
+56-65 : 145
+66-75 : 85
+76-85 : 25
+86-95 : 14
+96-105: 1
+>105  : 0
+[0m
+[0;31m\u2717 test-cases/38: ./corona -g M -s 20 age inputs/osoby-short.csv.bz2[0m
+
+Expected output:\e[2m
+0-5   : #
+6-15  : ###
+16-25 : ##########
+26-35 : ################
+36-45 : ####################
+46-55 : #################
+56-65 : ############
+66-75 : #######
+76-85 : ##
+86-95 : #
+96-105:
+>105  :
+[0m
+Actual output:\e[2m
+0-5   : #
+6-15  : ###
+16-25 : ##########
+26-35 : ################
+36-45 : ####################
+46-55 : #################
+56-65 : ############
+66-75 : #######
+76-85 : ##
+86-95 : #
+96-105: 
+>105  : 
+[0m
+[0;31m\u2717 test-cases/39: ./corona daily inputs/with_none.csv[0m
+
+Expected output:\e[2m
+2020-03-01: 1
+2020-03-03: 1
+None: 2
+[0m
+Actual output:\e[2m
+2020-03-01: 1
+2020-03-03: 1
+None: 2
+[0m
+[0;31m\u2717 test-cases/40: ./corona -s 27 gender inputs/osoby-short.csv[0m
+
+Expected output:\e[2m
+M: ###########################
+Z: #######################
+[0m
+Actual output:\e[2m
+M: ##########################
+Z: #######################
+[0m
+[0;31m\u2717 test-cases/41: ./corona monthly inputs/with_none.csv[0m
+
+Expected output:\e[2m
+2020-03: 2
+None: 2
+[0m
+Actual output:\e[2m
+2020-03: 2
+None: 2
+[0m
+[0;31m\u2717 test-cases/42: ./corona yearly inputs/with_none.csv[0m
+
+Expected output:\e[2m
+2020: 2
+None: 2
+[0m
+Actual output:\e[2m
+2020: 2
+None: 2
+[0m

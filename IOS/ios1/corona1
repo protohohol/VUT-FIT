@@ -1,0 +1,564 @@
+#!/bin/sh
+
+print_help() {
+    echo "Usage: corona [-h] [FILTERS] [COMMAND] [LOG [LOG2 [...]]"
+    echo " "
+    echo "HELP:"
+    echo "  -h — print a help with a short description of each command and switch."
+    echo " "
+    echo " LOG are files with records"
+    echo " "
+    echo "COMMAND:"
+    echo "  infected — calculates the number of infected."
+    echo "  merge — merges several files with records into one, preserving the original order."
+    echo "  gender — vypíše počet nakažených pro jednotlivá pohlaví."
+    echo "  age — lists the number of infected for each gender."
+    echo "  daily — prints the statistics of infected persons for each day."
+    echo "  monthly — prints the statistics of infected persons for each month."
+    echo "  yearly — prints the statistics of infected persons for each year."
+    echo "  countries — prints statistics of infected persons for each country of infection."
+    echo "  districts — prints statistics of infected persons for individual districts."
+    echo "  regions — prints statistics of infected persons for individual regions."
+    echo " "
+    echo "FILTERS:"
+    echo "  -a DATETIME — after: only records after this date (including this date) are considered. DATETIME is of the YYYY-MM-DD format."
+    echo "  -b DATETIME — before: only records before this date (including this date) are considered."
+    echo "  -g GENDER — only the records of infected persons of a given sex are considered. GENDER can be M (men) or Z (women)."
+    echo "  -s [WIDTH] — for the gender, age, daily, monthly, yearly, countries, districts and regions commands, it prints data not numerically, but graphically in the form of histograms. The optional WIDTH parameter sets the width of the histograms, that is, the length of the longest line, to width. Thus, width must be a positive integer. If the WIDTH parameter is not specified, the line widths are governed by the requirements below."
+    exit 0
+}
+
+print_error() {
+    echo "error"
+    exit 0  
+}
+
+BUFFER=
+WIDTH=
+flag_a="0"
+flag_b="0"
+flag_g="0"
+flag_s="0"
+
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+        #Help
+        -h | --help)
+            print_help
+            ;;
+        -a)
+            if [ -n "$DATE_A" ]
+            then
+                err="invalid filters: >1 DATE_A"
+                print_error
+            else
+                DATE_A="$2"
+                flag_a="1"
+                shift
+                shift
+            fi
+            ;;
+        -b)
+            if [ -n "$DATE_B" ]
+            then
+                err="invalid filters: >1 DATE_B"
+                print_error
+            else
+                DATE_B="$2"
+                flag_b="1"
+                shift
+                shift
+            fi
+            ;;
+        -g)
+            if [ -n "$GENDER" ]
+            then
+                err="invalid filters: >1 GENDER"
+                print_error
+            else
+                if [ -n "$2" ] && ([ "$2" == "M" ] || [ "$2" == "Z" ])
+                then
+                    GENDER="$2"
+                    flag_g="1"
+                    shift
+                    shift
+                else
+                    err="invalid GENDER"
+                    print_error
+                fi
+            fi
+            ;;
+        -s)
+            if [ -n "$WIDTH" ]
+            then
+                err="invalid filters: >1 width"
+                print_error
+            else
+                if [ -n "$2" ] && [ "$2" -eq "$2" ] 2>/dev/null
+                then
+                    if [ "$2" -lt "0" ]
+                    then
+                        err="invalid filter (width)"
+                        print_error
+                    else
+                        WIDTH="$2"
+                        flag_s="1"
+                        shift
+                        shift
+                    fi
+                else
+                    flag_s="1"
+                    shift
+                fi
+            fi
+            ;;
+        #Commands
+        infected | merge | gender | age | daily | monthly | yearly | countries | districts | regions)
+            if [ -n "$COMMAND" ]
+            then
+                err="invalid command: >1 command"
+                print_error
+            fi
+            COMMAND="$1"
+            shift
+            ;;
+        *.csv)
+            if [ -f "$1" ]
+            then
+                if [ -n "$CSV" ]
+                then
+                    CSV="$CSV $1"
+                else
+                    CSV="$1"
+                fi
+                shift
+            else
+                err="invalid file"
+                print_error
+            fi
+            ;;
+        *.gz)
+            if [ -f "$1" ]
+            then
+                if [ -n "$GZ" ]
+                then
+                    GZ="$GZ $1"
+                else
+                    GZ="$1"
+                fi
+                shift
+            else
+                err="invalid file"
+                print_error
+            fi
+            ;;
+        *.bz2)
+            if [ -f "$1" ]
+            then
+                if [ -n "$BZ2" ]
+                then
+                    BZ2="$BZ2 $1"
+                else
+                    BZ2="$1"
+                fi
+                shift
+            else
+                err="invalid file"
+                print_error
+            fi
+            ;;
+        *)
+            err="invalid argument"
+            print_error
+    esac
+done
+
+if [ -n "$GZ" ] || [ -n "$BZ2" ] || [ -n "$CSV" ]
+then
+    if [ -n "$GZ" ] && [ -z "$BZ2" ]
+    then
+        if [ -n "$BUFFER" ]
+        then
+            BUFFER="gunzip -c $GZ | $BUFFER"
+        else
+            BUFFER="gunzip -c $GZ"
+        fi
+    fi
+    if [ -n "$BZ2" ] && [ -z "$GZ" ]
+    then
+        if [ -n "$BUFFER" ]
+        then
+            BUFFER="bzcat -c $BZ2 | $BUFFER"
+        else
+            BUFFER="bzcat -c $BZ2"
+        fi
+    fi
+    if [ -n "$BZ2" ] && [ -n "$GZ" ]
+    then
+        if [ -n "$BUFFER" ]
+        then
+            BUFFER="( gunzip -c $GZ ; bzcat -c $BZ2 ) | $BUFFER"
+        else
+            BUFFER="( gunzip -c $GZ ; bzcat -c $BZ2 ) | cat -"
+        fi
+    fi
+    if [ -n "$CSV" ]
+    then
+        if [ -n "$BUFFER" ]
+        then
+            BUFFER="$BUFFER | cat $CSV -"
+        else
+            BUFFER="cat $CSV"
+        fi
+    fi
+else
+    err="invalid files"
+    print_error
+fi
+
+if    [ "$COMMAND" = "infected" ];                       then final_command="$infected";
+elif  [ "$COMMAND" = "merge" ] || [ -z "$COMMAND" ];     then final_command="$merge";
+elif  [ "$COMMAND" = "gender" ];                         then final_command="$gender";
+elif  [ "$COMMAND" = "age" ];                            then final_command="$age";
+elif  [ "$COMMAND" = "daily" ];                          then final_command="$daily";
+elif  [ "$COMMAND" = "monthly" ];                        then final_command="$monthly";
+elif  [ "$COMMAND" = "yearly" ];                         then final_command="$yearly";
+elif  [ "$COMMAND" = "countries" ];                      then final_command="$countries";
+elif  [ "$COMMAND" = "districts" ];                      then final_command="$districts";
+elif  [ "$COMMAND" = "regions" ];                        then final_command="$regions";
+fi
+
+echo $final_command
+
+
+# Filters
+filters=" \
+awk \
+-F, \
+-v d_a="\$DATE_A" \
+-v d_b="\$DATE_B" \
+-v gen="\$GENDER" \
+-v ctrl1="\$flag_a" \
+-v ctrl2="\$flag_b" \
+-v ctrl3="\$flag_g" \
+'{
+    control=1;
+    if (\$1 != \"id\") {
+        if (\$3 < 0 || \$3 !~ \"^[0-9]+$\") {
+            printf (\"Invalid age: %s\n\", \$0);
+            control=0;
+        }
+        if (\$2 !~ \"^[0-9]{4}-[0-9]{2}-[0-9]{2}$\") {
+            printf (\"Invalid date: %s\n\", \$0);
+            control=0;
+        }
+    }
+    if (ctrl1 || ctrl2 || ctrl3 || ctrl4) {
+        if (ctrl1) {
+            if (d_a ~ \"^[0-9]{4}-[0-9]{2}-[0-9]{2}$\") {
+                if (\$2 < d_a) {
+                    control=0
+                }
+            } else {
+                printf (\"invalid date\n\");
+                exit 0;
+            }
+        } 
+        if (ctrl2) {
+            if (d_b ~ \"^[0-9]{4}-[0-9]{2}-[0-9]{2}$\") {
+                if (\$2 > d_b) {
+                    control=0
+                }
+            } else {
+                printf (\"invalid date\n\");
+                exit 0;
+            }
+        } 
+        if (ctrl3) {
+            if (\$4 != gen) {
+                control=0
+            }
+        }
+        if (control == 1) {
+            print
+        }
+    } else if (control == 1) {
+        print
+    }
+}'"
+
+filter_s=" \
+sort -t ':' -k '2' -n -r | \
+awk \
+-F ':' \
+-v width2="\$WIDTH" \
+-v ctrl4="\$flag_s" \
+-v command="\$COMMAND" \
+'{
+    width=width2;
+    if (ctrl4) {
+        if (width == \"\") {
+            if (command == \"gender\" || command == \"yearly\") {
+                width=100000
+            }
+            if (command == \"age\" || command == \"monthly\" || command == \"regions\") {
+                width=10000
+            }
+            if (command == \"daily\") {
+                width=500
+            }
+            if (command == \"countries\") {
+                width=100
+            }
+            if (command == \"districts\") {
+                width=1000
+            }
+            Counter=int(\$2/width);
+            for (i=0; i < Counter; i++) {
+                res=res\"#\"
+            }
+        } else {
+            if (\$2 > max) {
+                max=\$2
+            } 
+            coef=(max/width);
+            number=int(\$2/coef);
+            for (i=0; i < number; i++) {
+                res=res\"#\"
+            }
+        }
+        printf (\"%s: %s\n\", \$1, res);
+        counter=0;
+        number=0;
+        res=\"\";
+    }
+    width=\"\"
+}' | sort"
+
+# Commands
+infected=" \
+sed '/id/d' | \
+awk \
+'
+END \
+{
+    print NR
+}'"
+
+merge=" \
+sed '/id/d' | \
+awk \
+-F,
+-v header="0"
+'{
+    if (header == 0) {}
+        printf (\"id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs\n\");
+        header++;
+    }
+    print
+}'"
+
+age=" \
+sed '/id/d' | \
+awk \
+-F, \
+'{ 
+    if (\$3 >= 0 && \$3 <= 5) { 
+        a++ 
+    } else if (\$3 >= 6 && \$3 <= 15) {
+        b++ 
+    } else if (\$3 >= 16 && \$3 <= 25) { 
+        c++ 
+    } else if (\$3 >= 26 && \$3 <= 35) { 
+        d++ 
+    } else if (\$3 >= 36 && \$3 <= 45) { 
+        e++
+    } else if (\$3 >= 46 && \$3 <= 55) { 
+        f++
+    } else if (\$3 >= 56 && \$3 <= 65) { 
+        g++
+    } else if (\$3 >= 66 && \$3 <= 75) { 
+        h++
+    } else if (\$3 >= 76 && \$3 <= 85) { 
+        i++
+    } else if (\$3 >= 86 && \$3 <= 95) { 
+        j++
+    } else if (\$3 >= 96 && \$3 <= 105) { 
+        k++
+    } else if (\$3 > 105) {
+        l++
+    } else { 
+        n++ 
+    }
+}
+END \
+{ 
+    printf (\"0-5: \" a \"\n6-15: \" b \"\n16-25: \" c \"\n26-35: \" d \"\n36-45: \" e \"\n46-55: \" f \"\n56-65: \" g \"\n66-75: \" h \"\n76-85: \" i \"\n86-95: \" j \"\n96-105: \" k \"\n>105: \" l \"\nNone: \" n\"\n\")
+}'"
+
+gender=" \
+sed '/id/d' | \
+awk \
+-F, \
+'{
+    print \$4
+}'| \
+sort | \
+uniq -c | \
+awk \
+-v width=\"\$WIDTH\" \
+-v ctrl4=\"\$flag_s\" \
+'{
+    if (\$2 == \"\") {
+        none=\$1
+    } else {
+        printf (\"%s: %d\n\", \$2, \$1)
+    }
+}
+END \
+{
+    if (none != 0) {
+        printf(\"None: %d\n\", none)
+    }
+}'"
+
+daily=" \
+sed '/id/d' | \
+awk \
+-F, \
+'{ print \$2 }' | \
+sort | \
+uniq -c | \
+awk \
+'
+{
+    if (\$2 == \"\") {
+        none=\$1
+    } else {
+        printf (\"%s: %d\n\", \$2, \$1)
+    }
+}
+END \
+{ if (none != 0) {
+    printf(\"None: %d\n\", none)
+    }
+}'"
+
+monthly="sed '/id/d' | \
+awk \
+-F, \
+'{
+    print substr(\$2, 0, 7)
+}' | \
+sort | \
+uniq -c | \
+awk \
+'{
+    if (\$2 == \"\") {
+        none=\$1
+    } else {
+        printf (\"%s: %d\n\", \$2, \$1)
+    }
+}
+END \
+{
+    if (none != 0) {
+        printf(\"None: %d\n\", none)
+    }
+}'"
+
+yearly="sed '/id/d' | \
+awk \
+-F, \
+'{
+    print substr(\$2, 0, 4)
+}' | \
+sort | \
+uniq -c | \
+awk \
+'{
+    if (\$2 == \"\") {
+            none=\$1
+    } else {
+        printf (\"%s: %d\n\", \$2, \$1)
+    }
+}
+END \
+{
+    if (none != 0) {
+        printf(\"None: %d\n\", none)
+    }
+}'"
+
+countries="sed '/id/d' | \
+awk \
+-F, \
+'{
+    print \$8
+}' | \
+sort | \
+sed '/^$/d' | \
+uniq -c | \
+sed '/CZ/d' | \
+awk \
+'{
+    printf (\"%s: %d\n\", \$2, \$1)
+}'"
+
+districts="sed '/id/d' | \
+awk \
+-F, \
+'{
+    print \$6
+}' | \
+sort | \
+uniq -c | \
+awk \
+'{
+    if (\$2 == \"\") {
+        none=\$1
+    } else {
+        printf (\"%s: %d\n\", \$2, \$1)
+    }
+}
+END \
+{
+    if (none != 0) {
+        printf(\"None: %d\n\", none)
+    }
+}'"
+
+regions="sed '/id/d' | \
+awk \
+-F, \
+'{ print \$5 }' | \
+sort | \
+uniq -c | \
+awk \
+'{
+    if (\$2 == \"\") {
+        none=\$1
+    } else {
+        printf (\"%s: %d\n\", \$2, \$1)
+    }
+}
+END \
+{
+    if (none != 0) {
+        printf(\"None: %d\n\", none)
+    }
+}'"
+
+
+if [ -n "$final_command" ]
+then
+    if [ "$flag_s" -eq 1 ]
+    then
+        eval "$BUFFER | $filters | $final_command | $filter_s"
+    else
+       eval "$BUFFER | $filters | $final_command"
+    fi
+else
+    eval "$BUFFER | $filters"
+fi

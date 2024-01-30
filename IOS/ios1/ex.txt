@@ -1,0 +1,153 @@
+$ cat osoby.csv | head -n 5 | ./corona
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+6f4125cb-fb41-4fb0-a478-07b69ba106a4,2020-03-01,21,Z,CZ010,CZ0100,1,IT,1
+5841443b-7df4-4af9-acab-75ca47010ec3,2020-03-01,43,M,CZ042,CZ0421,1,IT,1
+5cdb7ece-97a2-4336-9715-59dc70a48a2c,2020-03-01,67,M,CZ010,CZ0100,1,IT,1
+d345e0e2-9056-4d3f-b790-485b12831180,2020-03-03,21,Z,CZ010,CZ0100,,,
+---
+$ ./corona infected osoby.csv
+3510360
+---
+$ ./corona infected infected-jan22/2022-01-*.csv
+560894
+---
+$ ./corona merge infected-jan22/2022-01-*.csv
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+741d72a4-2b6e-4703-872d-928748ca0ade,2022-01-01,3,Z,CZ020,CZ0203,,,1
+f39754b8-5e7f-44fd-8b65-e4e7e3b89521,2022-01-01,52,Z,CZ052,CZ0522,,,1
+...
+1a27f58f-8950-40c5-89fa-3795f4a906f4,2022-01-31,19,Z,CZ063,CZ0635,,,1
+9aebc069-89d5-4ba0-96c5-aefa1f2c6746,2022-01-31,19,M,CZ064,CZ0642,,,1
+---
+$ cat osoby.csv | ./corona gender
+M: 1703679
+Z: 1806681
+---
+$ cat 'osoby.csv' | ./corona -a 2021-07-19 infected
+1835517
+---
+$ cat osoby.csv | ./corona daily
+2020-03-01: 3
+2020-03-03: 2
+2020-03-04: 1
+...
+2022-02-19: 8218
+2022-02-20: 4267
+---
+$ cat osoby.csv | ./corona monthly
+2020-03: 3316
+2020-04: 4385
+2020-05: 1615
+...
+2022-01: 560894
+2022-02: 465810
+---
+$ cat osoby.csv | ./corona yearly
+2020: 732808
+2021: 1750848
+2022: 1026704
+---
+$ ./corona countries osoby.csv
+99: 1
+AD: 1
+AE: 444
+AF: 13
+...
+ZA: 36
+ZM: 2
+ZW: 1
+---
+$ ./corona -g M osoby.csv | head -n 6
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+5841443b-7df4-4af9-acab-75ca47010ec3,2020-03-01,43,M,CZ042,CZ0421,1,IT,1
+5cdb7ece-97a2-4336-9715-59dc70a48a2c,2020-03-01,67,M,CZ010,CZ0100,1,IT,1
+496a049f-656e-4274-a51f-72aa92d01f33,2020-03-05,49,M,CZ042,CZ0421,1,IT,1
+815a2219-2735-46ae-8b14-658459481b2f,2020-03-06,47,M,CZ010,CZ0100,1,IT,1
+9f78dd0d-2e71-4d37-89a2-665b44b2a607,2020-03-06,44,M,CZ010,CZ0100,1,IT,1
+---
+$ cat /dev/null | ./corona
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+---
+$ ./corona -s daily osoby.csv
+2020-03-01:
+2020-03-03:
+2020-03-04:
+...
+2022-02-19: ################
+2022-02-20: ########
+---
+$ ./corona -s monthly osoby.csv
+2020-03:
+2020-04:
+2020-05:
+...
+2022-01: ########################################################
+2022-02: ##############################################
+---
+$ ./corona -s 20 yearly osoby.csv
+2020: ########
+2021: ####################
+2022: ###########
+---
+$ ./corona osoby.csv.gz | head -n 5
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+6f4125cb-fb41-4fb0-a478-07b69ba106a4,2020-03-01,21,Z,CZ010,CZ0100,1,IT,1
+5841443b-7df4-4af9-acab-75ca47010ec3,2020-03-01,43,M,CZ042,CZ0421,1,IT,1
+5cdb7ece-97a2-4336-9715-59dc70a48a2c,2020-03-01,67,M,CZ010,CZ0100,1,IT,1
+d345e0e2-9056-4d3f-b790-485b12831180,2020-03-03,21,Z,CZ010,CZ0100,,,
+---
+$ ./corona osoby.csv.bz2 | head -n 5
+id,datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod,nakaza_v_zahranici,nakaza_zeme_csu_kod,reportovano_khs
+6f4125cb-fb41-4fb0-a478-07b69ba106a4,2020-03-01,21,Z,CZ010,CZ0100,1,IT,1
+5841443b-7df4-4af9-acab-75ca47010ec3,2020-03-01,43,M,CZ042,CZ0421,1,IT,1
+5cdb7ece-97a2-4336-9715-59dc70a48a2c,2020-03-01,67,M,CZ010,CZ0100,1,IT,1
+d345e0e2-9056-4d3f-b790-485b12831180,2020-03-03,21,Z,CZ010,CZ0100,,,
+---
+$ ./corona districts osoby.csv
+CZ0100: 448252
+CZ0201: 34423
+CZ0202: 33545
+CZ0203: 54368
+CZ0204: 36166
+...
+CZ0806: 103556
+None: 2959
+---
+$ ./corona regions osoby.csv
+CZ010: 448252
+CZ020: 482138
+...
+CZ080: 387509
+None: 2926
+---
+$ ./corona age osoby.csv
+0-5   : 118107
+6-15  : 511868
+16-25 : 410980
+26-35 : 511672
+36-45 : 649751
+46-55 : 570064
+56-65 : 359275
+66-75 : 225485
+76-85 : 110360
+86-95 : 39405
+96-105: 2651
+>105  : 302
+None  : 440
+---
+$ ./corona infected osoby2.csv
+Invalid date: 0dc57759-d153-45c2-8d14-fb92fc028060,2020-15-03,62,Z,CZ010,CZ0100,,,1
+Invalid age: 5b0a9692-a72a-4f34-a014-83ae08a79f20,2020-03-10,3.1415,Z,CZ071,CZ0712,1,IT,1
+9
+---
+$ ./corona daily osoby2.csv
+Invalid date: 0dc57759-d153-45c2-8d14-fb92fc028060,2020-15-03,62,Z,CZ010,CZ0100,,,1
+Invalid age: 5b0a9692-a72a-4f34-a014-83ae08a79f20,2020-03-10,3.1415,Z,CZ071,CZ0712,1,IT,1
+2020-03-01: 3
+2020-03-03: 2
+2020-03-04: 1
+2020-03-05: 3
+---
+$ ./corona -s 27 gender osoby-short.csv
+M: ###########################
+Z: #######################

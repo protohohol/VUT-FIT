@@ -1,0 +1,46 @@
+{extends '../@layout.latte'}
+
+{block content}
+
+    <nav>
+        <a href="/">Home</a>
+        {if $user->isInRole('admin')}
+                <a href="{link Admin:dashboard}">Admin Dashboard</a>
+        {/if}
+        {if !$user->isLoggedIn()}
+            <div class="user-info" style="float: right;">
+                <a href="{link Signin:default}">Login</a>
+                <a href="{link Signup:default}">Register</a>
+            </div>
+        {else}
+            <a href="{link UserSystems:default}">My systems</a>
+        <div class="user-info" style="float: right;">
+            <span>Vítejte, {$user->getIdentity()->username}</span>
+            <a href="{link Signout:default}">Odhlásit se</a>
+        </div>
+        {/if}
+    </nav>
+
+    <body>
+        <main>
+            <h1>Welcome to the Hellish Devices!</h1>
+            <div id="system-list">
+                <h2>System List from the Abyss</h2>
+                <div class="scrollable-list">
+                    {if $systems}
+                        {foreach $systems as $system}
+                            <div class="system-item">
+                                <strong><a href="{link Systeminfo:default, $system->system_id}">{$system->system_name}</a></strong> - Owned by: {$system->admin->username}
+                                {if $user->isInRole('admin')}
+                                    <a href="{link delete, $system->system_id}" onclick="return confirm('Opravdu chcete smazat system?');">Smazat</a>
+                                {/if}
+                            </div>
+                        {/foreach}
+                    {else}
+                        <p>No systems available in this Desolation.</p>
+                    {/if}
+                </div>
+            </div>
+        </main>
+    </body>
+{/block}

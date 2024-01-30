@@ -1,0 +1,313 @@
+Hash Table - testing script
+---------------------------
+
+Setting HT_SIZE to prime number (13)
+
+[test_table_init] Initialize the table
+
+------------HASH TABLE--------------
+0: 
+1: 
+2: 
+3: 
+4: 
+5: 
+6: 
+7: 
+8: 
+9: 
+10: 
+11: 
+12: 
+------------------------------------
+Total items in hash table: 0
+Maximum hash collisions: 0
+------------------------------------
+
+[test_search_nonexist] Search for a non-existing item
+
+------------HASH TABLE--------------
+0: 
+1: 
+2: 
+3: 
+4: 
+5: 
+6: 
+7: 
+8: 
+9: 
+10: 
+11: 
+12: 
+------------------------------------
+Total items in hash table: 0
+Maximum hash collisions: 0
+------------------------------------
+
+[test_insert_simple] Insert a new item
+id : 0
+
+------------HASH TABLE--------------
+0: (Ethereum,3208.67)
+1: 
+2: 
+3: 
+4: 
+5: 
+6: 
+7: 
+8: 
+9: 
+10: 
+11: 
+12: 
+------------------------------------
+Total items in hash table: 1
+Maximum hash collisions: 0
+------------------------------------
+
+[test_search_exist] Search for an existing item
+id : 0
+(Ethereum,3208.67)
+
+------------HASH TABLE--------------
+0: (Ethereum,3208.67)
+1: 
+2: 
+3: 
+4: 
+5: 
+6: 
+7: 
+8: 
+9: 
+10: 
+11: 
+12: 
+------------------------------------
+Total items in hash table: 1
+Maximum hash collisions: 0
+------------------------------------
+
+[test_insert_many] Insert many new items
+id : 11
+id : 0
+id : 9
+id : 8
+id : 10
+id : 4
+id : 9
+id : 12
+id : 3
+id : 12
+id : 3
+id : 4
+id : 5
+id : 3
+id : 4
+
+------------HASH TABLE--------------
+0: (Ethereum,3208.67)
+1: 
+2: 
+3: (Avalanche,47.03)
+4: (Chainlink,21.90)
+5: (Litecoin,156.87)
+6: 
+7: 
+8: (Cardano,1.82)
+9: (Solana,134.50)
+10: (Tether,0.86)
+11: (Bitcoin,53247.71)
+12: (USD Coin,0.86)
+------------------------------------
+Total items in hash table: 9
+Maximum hash collisions: 0
+------------------------------------
+
+[test_search_collision] Search for an item with colliding hash
+id : 11
+id : 0
+id : 9
+id : 8
+id : 10
+id : 4
+id : 9
+id : 12
+id : 3
+id : 12
+id : 3
+id : 4
+id : 5
+id : 3
+id : 4
+NULL
+
+------------HASH TABLE--------------
+0: (Ethereum,3208.67)
+1: 
+2: 
+3: (Avalanche,47.03)
+4: 
+5: (Litecoin,156.87)
+6: 
+7: 
+8: (Cardano,1.82)
+9: (Solana,134.50)
+10: (Tether,0.86)
+11: (Bitcoin,53247.71)
+12: (USD Coin,0.86)
+------------------------------------
+Total items in hash table: 8
+Maximum hash collisions: 0
+------------------------------------
+
+[test_insert_update] Update an item
+id : 11
+id : 0
+id : 9
+id : 8
+id : 10
+id : 4
+id : 9
+id : 12
+id : 3
+id : 12
+id : 3
+id : 4
+id : 5
+id : 3
+id : 4
+(Ethereum,3208.67)
+(Ethereum,12.34)
+
+------------HASH TABLE--------------
+0: (Ethereum,12.34)
+1: 
+2: 
+3: (Avalanche,47.03)
+4: (Chainlink,21.90)
+5: (Litecoin,156.87)
+6: 
+7: 
+8: (Cardano,1.82)
+9: (Solana,134.50)
+10: (Tether,0.86)
+11: (Bitcoin,53247.71)
+12: (USD Coin,0.86)
+------------------------------------
+Total items in hash table: 9
+Maximum hash collisions: 0
+------------------------------------
+
+[test_get] Get an item's value
+id : 11
+id : 0
+id : 9
+id : 8
+id : 10
+id : 4
+id : 9
+id : 12
+id : 3
+id : 12
+id : 3
+id : 4
+id : 5
+id : 3
+id : 4
+(Ethereum,3208.67)
+3208.67
+
+------------HASH TABLE--------------
+0: (Ethereum,3208.67)
+1: 
+2: 
+3: (Avalanche,47.03)
+4: (Chainlink,21.90)
+5: (Litecoin,156.87)
+6: 
+7: 
+8: (Cardano,1.82)
+9: (Solana,134.50)
+10: (Tether,0.86)
+11: (Bitcoin,53247.71)
+12: (USD Coin,0.86)
+------------------------------------
+Total items in hash table: 9
+Maximum hash collisions: 0
+------------------------------------
+
+[test_delete] Delete an item
+id : 11
+id : 0
+id : 9
+id : 8
+id : 10
+id : 4
+id : 9
+id : 12
+id : 3
+id : 12
+id : 3
+id : 4
+id : 5
+id : 3
+id : 4
+
+------------HASH TABLE--------------
+0: (Ethereum,3208.67)
+1: 
+2: 
+3: (Avalanche,47.03)
+4: 
+5: (Litecoin,156.87)
+6: 
+7: 
+8: (Cardano,1.82)
+9: (Solana,134.50)
+10: (Tether,0.86)
+11: (Bitcoin,53247.71)
+12: (USD Coin,0.86)
+------------------------------------
+Total items in hash table: 8
+Maximum hash collisions: 0
+------------------------------------
+
+[test_delete_all] Delete all the items
+id : 11
+id : 0
+id : 9
+id : 8
+id : 10
+id : 4
+id : 9
+id : 12
+id : 3
+id : 12
+id : 3
+id : 4
+id : 5
+id : 3
+id : 4
+
+------------HASH TABLE--------------
+0: 
+1: 
+2: 
+3: 
+4: 
+5: 
+6: 
+7: 
+8: 
+9: 
+10: 
+11: 
+12: 
+------------------------------------
+Total items in hash table: 0
+Maximum hash collisions: 0
+------------------------------------
+

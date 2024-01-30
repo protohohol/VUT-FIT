@@ -1,0 +1,47 @@
+[34mbasic[0m
+  [32mbasic/simple_tag[0m
+  [31mbasic/read_test[0m
+Expected:
+<?xml version="1.0" encoding="UTF-8"?>
+<program language="IPPcode23">
+    <instruction order="1" opcode="DEFVAR">
+        <arg1 type="var">GF@a</arg1>
+    </instruction>
+    <instruction order="2" opcode="READ">
+        <arg1 type="var">GF@a</arg1>
+        <arg2 type="type">int</arg2>
+    </instruction>
+    <instruction order="3" opcode="WRITE">
+        <arg1 type="var">GF@a</arg1>
+    </instruction>
+    <instruction order="4" opcode="WRITE">
+        <arg1 type="string">\032&lt;not-tag/&gt;\032</arg1>
+    </instruction>
+    <instruction order="5" opcode="WRITE">
+        <arg1 type="bool">true</arg1>
+    </instruction>
+</program>
+
+Got:
+<?xml version="1.0" encoding="UTF-8"?>
+<program language="IPPcode23">
+	<instruction order="1" opcode="DEFVAR">
+		<arg1 type="var">GF@a</arg1>
+	</instruction>
+	<instruction order="2" opcode="READ">
+		<arg1 type="var">GF@a</arg1>
+		<arg2 type="type">int</arg2>
+	</instruction>
+	<instruction order="3" opcode="WRITE">
+		<arg1 type="var">GF@a</arg1>
+	</instruction>
+	<instruction order="4" opcode="WRITE">
+		<arg1 type="string">\032<not-tag/&gt;\032</arg1>
+	</instruction>
+	<instruction order="5" opcode="WRITE">
+		<arg1 type="bool">true</arg1>
+	</instruction>
+</program>
+  [32mbasic/write_test[0m
+
+Tests finished with [31m1 failed tests[0m and [32m2 passed tests[0m

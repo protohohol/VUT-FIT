@@ -1,0 +1,151 @@
+{extends '../@layout.latte'}
+{block content}
+
+    <nav>
+        <a href="/">Home</a>
+        {if $user->isInRole('admin')}
+                <a href="{link Admin:dashboard}">Admin Dashboard</a>
+        {/if}
+        {if !$user->isLoggedIn()}
+            <div class="user-info" style="float: right;">
+                <a href="{link Signin:default}">Login</a>
+                <a href="{link Signup:default}">Register</a>
+            </div>
+        {else}
+            <a href="{link UserSystems:default}">My systems</a>
+        <div class="user-info" style="float: right;">
+            <span>Vítejte, {$user->getIdentity()->username}</span>
+            <a href="{link Signout:default}">Odhlásit se</a>
+        </div>
+        {/if}
+    </nav>
+
+    <!-- Flash Messages -->
+    {snippet flashMessages}
+        {foreach $flashes as $flash}
+            <div class="alert alert-{$flash->type}">{$flash->message}</div>
+        {/foreach}
+    {/snippet}
+
+    <!-- System Information (Dynamically Updated) -->
+    {snippet renderDefault}
+    {/snippet}
+
+    <!-- System Edit Form -->
+    {snippet systemEditForm}
+        {include 'systemInfoSnippet'}
+    {/snippet}
+    
+    {snippet addUserForm}
+    {/snippet}
+
+{/block}
+
+
+
+
+{define systemInfoSnippet}
+    {if $system}
+        <h2>{$system->system_name}</h2>
+        <h2>Vlastník systému: {$systemOwner->username}</h2>
+        <p>{$system->system_description}</p>
+        
+        {if $user->isLoggedIn() && ($user->isInRole('admin') || $user->getId() == $systemOwner->user_id || $userInSystem)}
+            {if $users}
+                <h3>Uživatelé:</h3>
+                {foreach $users as $us}
+                    <p>{$us->username}
+                        {if $user->isInRole('admin') || $user->getId() == $systemOwner->user_id}
+                            <a href="{link delete, $systemId, $us->user_id}" onclick="return confirm('Opravdu chcete smazat uživatele?');">Smazat</a>
+                        {/if}
+                    </p>
+                {/foreach}
+            {else}
+                <p>Tento systém v současné době nemá žádné uživatele</p>
+            {/if}
+
+            {if $user->isInRole('admin') || $user->getId() == $systemOwner->user_id}
+                <button id="showAddUserForm">Přidat uživatele</button>
+                <div id="addUserForm" style="display: none;">
+                    {control addUserForm}
+                </div>
+                
+                <button id="showSystemEditForm">Upravit informaci o systemu</button>
+                <div id="systemEditForm" style="display: none;">
+                    {control systemEditForm}
+                </div>
+            {/if}
+            
+            <button id="showDevices"><a href="{link Systeminfo:showDevices, $systemId}">Zobrazit zařízení</a></button>
+        {/if}
+
+    {else}
+        <p>Systémové informace nejsou k dispozici.</p>
+    {/if}
+{/define}
+
+
+
+{block scripts}
+    <script>
+    
+        function bindShowFormButton() {
+            var showAddUserForm = document.getElementById('showAddUserForm');
+            if (showAddUserForm) {
+                showAddUserForm.removeEventListener('click', toggleAddUserForm); // Remove existing listener to prevent duplicates
+                showAddUserForm.addEventListener('click', toggleAddUserForm);
+            }
+
+            var showSystemEditForm = document.getElementById('showSystemEditForm');
+            if (showSystemEditForm) {
+                showSystemEditForm.removeEventListener('click', toggleSystemEditForm); // Remove existing listener to prevent duplicates
+                showSystemEditForm.addEventListener('click', toggleSystemEditForm);
+            }
+        }
+
+        function toggleAddUserForm() {
+            toggleForm('addUserForm');
+        }
+
+        function toggleSystemEditForm() {
+            toggleForm('systemEditForm');
+        }
+
+        function toggleForm(formId) {
+            var form = document.getElementById(formId);
+            if (form) {
+                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        console.log('default.latte script is running');
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM fully loaded and parsed');
+
+            naja.addEventListener('before', (event) => {
+                console.log('Before AJAX request is sent', event);
+            });
+
+            naja.addEventListener('success', (event) => {
+                console.log('AJAX request successful', event);
+            });
+
+            naja.addEventListener('error', (event) => {
+                console.log('AJAX request failed', event);
+            });
+
+            bindShowFormButton();
+
+            // Re-bind the event listener after Naja updates the page
+            naja.snippetHandler.addEventListener('afterUpdate', function () {
+                bindShowFormButton();
+            });
+
+            naja.snippetHandler.addEventListener('afterUpdate', function (event) {
+                if (event.snippet.id === 'flashMessages') {
+                    // Additional JS if needed when flash messages are updated
+                }
+            });
+        });
+    </script>
+{/block}

@@ -1,0 +1,122 @@
+{extends '../@layout.latte'}
+
+{block title}Admin Dashboard{/block}
+
+{block content}
+    <nav>
+        <a href="/">Home</a>
+        {if $user->isInRole('admin')}
+                <a href="{link Admin:dashboard}">Admin Dashboard</a>
+        {/if}
+        {if !$user->isLoggedIn()}
+            <div class="user-info" style="float: right;">
+                <a href="{link Signin:default}">Login</a>
+                <a href="{link Signup:default}">Register</a>
+            </div>
+        {else}
+            <a href="{link UserSystems:default}">My systems</a>
+        <div class="user-info" style="float: right;">
+            <span>Vítejte, {$user->getIdentity()->username}</span>
+            <a href="{link Signout:default}">Odhlásit se</a>
+        </div>
+        {/if}
+    </nav>
+    <h1>Admin Dashboard</h1>
+    
+
+    <!-- Flash Messages -->
+    {snippet flashMessages}
+        {foreach $flashes as $flash}
+            <div class="alert alert-{$flash->type}">{$flash->message}</div>
+        {/foreach}
+    {/snippet}
+
+    {snippet createUserForm}
+        <button id="showCreateUserForm">Vytvořit uživatele</button>
+        <div id="createUserForm" style="display: none;">
+            {control createUserForm}
+        </div>
+        {include 'userInfoSnippet'}
+    {/snippet}
+
+    {define userInfoSnippet}
+    
+        <table>
+            <tr>
+                <th>Uživatelské jméno</th>
+                <th>user_id</th> 
+                <th>Role</th>   
+            </tr>
+        
+            {if $users}
+                {foreach $users as $userItem}
+                    <tr>
+                        <td>{$userItem->username}</td>
+                        
+                        <td>{$userItem->user_id}</td> 
+                        <td>{$userItem->role}</td>
+                        {if $userItem->user_id != $user->getId()}   
+                            <td>
+                                <a href="{link editUserForm, $userItem->user_id}">Upravit</a>
+                                <a href="{link delete, $userItem->user_id}" onclick="return confirm('Opravdu chcete smazat tohoto uživatele?');">Smazat</a>
+                            </td>
+                        {/if}
+                    </tr>
+                {/foreach}
+            {else}
+                <p>Uzivatele nenalezene</p>
+            {/if}
+        {/define}
+
+    </table>
+{/block}
+
+{block scripts}
+    <script>
+
+        function bindShowFormButton() {
+            var button = document.getElementById('showCreateUserForm');
+            if (button) {
+                button.removeEventListener('click', toggleForm); // Remove existing listener to prevent duplicates
+                button.addEventListener('click', toggleForm);
+            }
+        }
+
+        function toggleForm() {
+            var form = document.getElementById('createUserForm');
+            if (form) {
+                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        console.log('default.latte script is running');
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM fully loaded and parsed');
+
+            naja.addEventListener('before', (event) => {
+                console.log('Before AJAX request is sent', event);
+            });
+
+            naja.addEventListener('success', (event) => {
+                console.log('AJAX request successful', event);
+            });
+
+            naja.addEventListener('error', (event) => {
+                console.log('AJAX request failed', event);
+            });
+
+            bindShowFormButton(); // Bind the event listener on page load
+
+            // Re-bind the event listener after Naja updates the page
+            naja.snippetHandler.addEventListener('afterUpdate', function () {
+                bindShowFormButton();
+            });
+
+            naja.snippetHandler.addEventListener('afterUpdate', function (event) {
+                if (event.snippet.id === 'flashMessages') {
+                    // Additional JS if needed when flash messages are updated
+                }
+            });
+        });
+    </script>
+{/block}
